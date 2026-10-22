@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ff-external-esp — FreeFire External ESP (Educational)</title>
+<style>
+  :root{
+    --bg-0:#070a14;
+    --bg-1:#0c1024;
+    --bg-2:#121632;
+    --indigo:#6d5efc;
+    --indigo-soft:#8b7dff;
+    --cyan:#41d9ff;
+    --pink:#ff5ea8;
+    --txt:#eef1ff;
+    --muted:#9aa3c7;
+    --line:rgba(255,255,255,.08);
+    --card:rgba(255,255,255,.035);
+    --glass:rgba(14,18,40,.55);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--txt);
+    background:
+      radial-gradient(1100px 700px at 82% -8%, rgba(109,94,252,.30), transparent 60%),
+      radial-gradient(900px 620px at 8% 4%, rgba(65,217,255,.14), transparent 58%),
+      radial-gradient(1200px 900px at 50% 108%, rgba(255,94,168,.13), transparent 60%),
+      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 22px;}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:100;
+    background:var(--glass);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    height:66px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px;font-size:1.02rem;}
+  .brand .dot{
+    width:26px;height:26px;border-radius:8px;
+    background:linear-gradient(135deg,var(--indigo),var(--cyan));
+    display:grid;place-items:center;font-size:.78rem;
+    box-shadow:0 0 18px rgba(109,94,252,.55);
+  }
+  .brand span.accent{
+    background:linear-gradient(90deg,var(--indigo-soft),var(--cyan));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  nav.links{display:flex;align-items:center;gap:26px;font-size:.92rem;color:var(--muted);}
+  nav.links a{transition:color .18s ease;}
+  nav.links a:hover{color:var(--txt);}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    border-radius:12px;font-weight:700;font-size:.94rem;
+    padding:11px 20px;border:1px solid transparent;
+    cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--indigo),#4a3bf0 60%,#3a86ff);
+    color:#fff;
+    box-shadow:0 10px 28px -8px rgba(109,94,252,.75), inset 0 1px 0 rgba(255,255,255,.22);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -8px rgba(109,94,252,.9), inset 0 1px 0 rgba(255,255,255,.22);}
+  .btn-ghost{
+    background:rgba(255,255,255,.04);
+    border-color:rgba(255,255,255,.16);
+    color:var(--txt);
+  }
+  .btn-ghost:hover{transform:translateY(-2px);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.28);}
+  .nav .btn{padding:9px 17px;font-size:.88rem;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:88px 0 64px;text-align:center;overflow:hidden;}
+  .hero::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(600px 300px at 50% 0%, rgba(109,94,252,.22), transparent 70%);
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:7px 16px;border-radius:999px;
+    font-size:.8rem;font-weight:600;letter-spacing:.4px;
+    color:#cfd6ff;
+    background:rgba(109,94,252,.12);
+    border:1px solid rgba(109,94,252,.38);
+    box-shadow:0 0 24px -6px rgba(109,94,252,.5);
+    position:relative;z-index:1;
+  }
+  .pill .pulse{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--cyan);box-shadow:0 0 10px var(--cyan);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:.45;transform:scale(.7);}
+  }
+  h1{
+    position:relative;z-index:1;
+    margin:24px auto 18px;max-width:900px;
+    font-size:clamp(2.1rem,5.4vw,3.7rem);
+    line-height:1.1;letter-spacing:-1.2px;font-weight:800;
+    background:linear-gradient(92deg,#ffffff 4%,var(--indigo-soft) 38%,var(--cyan) 68%,var(--pink) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.lead{
+    position:relative;z-index:1;
+    max-width:660px;margin:0 auto 36px;
+    color:var(--muted);font-size:1.06rem;
+  }
+  .hero-cta{
+    position:relative;z-index:1;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:48px;
+  }
+  .hero-cta .btn{padding:14px 28px;font-size:1rem;border-radius:14px;}
+  .stats{
+    position:relative;z-index:1;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+    max-width:860px;margin:0 auto;
+  }
+  .chip{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 12px;
+    backdrop-filter:blur(8px);
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .chip:hover{border-color:rgba(109,94,252,.45);transform:translateY(-3px);}
+  .chip .val{font-weight:800;font-size:1.14rem;letter-spacing:.2px;}
+  .chip .lbl{font-size:.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-top:2px;}
+
+  /* ---------- SECTION HEADINGS ---------- */
+  section{padding:70px 0;position:relative;}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto 46px;}
+  .sec-head .kicker{
+    font-size:.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+    color:var(--cyan);margin-bottom:12px;
+  }
+  .sec-head h2{
+    font-size:clamp(1.6rem,3.6vw,2.35rem);letter-spacing:-.6px;line-height:1.18;font-weight:800;
+  }
+  .sec-head p{color:var(--muted);margin-top:12px;font-size:.98rem;}
+
+  /* ---------- FEATURES ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:28px 24px 26px;
+    overflow:hidden;
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--indigo),var(--cyan),var(--pink));
+    opacity:.85;
+    transform:scaleX(.35);transform-origin:left;
+    transition:transform .3s ease;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(109,94,252,.4);
+    box-shadow:0 22px 44px -22px rgba(109,94,252,.65);
+  }
+  .card:hover::before{transform:scaleX(1);}
+  .card .ico{font-size:1.7rem;line-height:1;margin-bottom:16px;display:block;}
+  .card h3{font-size:1.03rem;font-weight:800;margin-bottom:8px;letter-spacing:.1px;}
+  .card p{color:var(--muted);font-size:.9rem;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{position:relative;max-width:760px;margin:0 auto;padding-left:8px;}
+  .steps::before{
+    content:"";position:absolute;left:33px;top:14px;bottom:14px;width:3px;border-radius:3px;
+    background:linear-gradient(180deg,var(--indigo),var(--cyan),var(--pink));
+    opacity:.7;
+  }
+  .step{position:relative;display:flex;gap:26px;padding:0 0 40px 0;}
+  .step:last-child{padding-bottom:0;}
+  .step .num{
+    flex:0 0 auto;z-index:1;
+    width:52px;height:52px;border-radius:50%;
+    display:grid;place-items:center;
+    font-weight:800;font-size:1.05rem;
+    background:linear-gradient(135deg,#1a1f42,#12162f);
+    border:1px solid rgba(109,94,252,.55);
+    box-shadow:0 0 0 5px rgba(7,10,20,.9), 0 0 26px -6px rgba(109,94,252,.8);
+    color:var(--indigo-soft);
+  }
+  .step .body{padding-top:6px;}
+  .step h3{font-size:1.06rem;font-weight:800;margin-bottom:6px;}
+  .step p{color:var(--muted);font-size:.93rem;max-width:540px;}
+  .step code{
+    font-family:Consolas,"SF Mono",ui-monospace,monospace;
+    font-size:.84rem;color:var(--cyan);
+    background:rgba(65,217,255,.08);
+    border:1px solid rgba(65,217,255,.22);
+    padding:1px 7px;border-radius:6px;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+  details{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:0 22px;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  details[open]{border-color:rgba(109,94,252,.42);background:rgba(109,94,252,.06);}
+  summary{
+    list-style:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    padding:19px 0;font-weight:700;font-size:.98rem;
+    user-select:none;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary .plus{
+    flex:0 0 auto;position:relative;width:22px;height:22px;
+    transition:transform .28s ease;
+  }
+  summary .plus::before,
+  summary .plus::after{
+    content:"";position:absolute;top:50%;left:50%;
+    background:var(--indigo-soft);border-radius:2px;
+    transform:translate(-50%,-50%);
+  }
+  summary .plus::before{width:14px;height:2px;}
+  summary .plus::after{width:2px;height:14px;transition:opacity .2s ease, transform .28s ease;}
+  details[open] summary .plus{transform:rotate(45deg);}
+  details[open] summary .plus::after{opacity:0;}
+  details p.ans{
+    color:var(--muted);font-size:.92rem;
+    padding:0 0 22px;max-width:660px;
+  }
+
+  /* ---------- CTA BANNER ---------- */
+  .cta-banner{
+    position:relative;overflow:hidden;
+    border-radius:26px;
+    border:1px solid rgba(109,94,252,.35);
+    background:linear-gradient(150deg,rgba(109,94,252,.16),rgba(65,217,255,.05) 45%,rgba(255,94,168,.10));
+    padding:64px 36px;
+    text-align:center;
+  }
+  .cta-banner::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(520px 300px at 50% 42%, rgba(109,94,252,.42), transparent 70%);
+  }
+  .cta-banner > *{position:relative;z-index:1;}
+  .cta-banner h2{
+    font-size:clamp(1.55rem,3.8vw,2.4rem);
+    letter-spacing:-.7px;line-height:1.2;font-weight:800;
+    max-width:640px;margin:0 auto 14px;
+  }
+  .cta-banner p{color:var(--muted);max-width:520px;margin:0 auto 30px;font-size:.98rem;}
+  .cta-banner .btn{padding:15px 34px;font-size:1.02rem;border-radius:14px;}
+  .cta-note{margin-top:18px;font-size:.77rem;color:#7c85ab;letter-spacing:.4px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:34px 0 42px;
+    margin-top:20px;
+  }
+  .foot-inner{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    font-size:.85rem;color:var(--muted);
+  }
+  .foot-inner a.gh{
+    display:inline-flex;align-items:center;gap:8px;
+    color:var(--txt);font-weight:600;
+    transition:color .18s ease;
+  }
+  .foot-inner a.gh:hover{color:var(--cyan);}
+  .foot-inner .disc{
+    width:100%;font-size:.76rem;color:#6c7499;line-height:1.55;
+    border-top:1px dashed rgba(255,255,255,.07);
+    padding-top:18px;margin-top:6px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:900px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .stats{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:640px){
+    nav.links{display:none;}
+    .nav-inner{height:60px;}
+    .nav .btn{padding:8px 14px;font-size:.82rem;}
+    .hero{padding:60px 0 46px;}
+    .hero-cta .btn{width:100%;}
+    .grid{grid-template-columns:1fr;}
+    .stats{grid-template-columns:1fr 1fr;gap:10px;}
+    section{padding:52px 0;}
+    .step{gap:18px;}
+    .steps::before{left:25px;}
+    .step .num{width:44px;height:44px;font-size:.95rem;}
+    .cta-banner{padding:46px 22px;}
+    .cta-banner .btn{width:100%;}
+    .foot-inner{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="brand">
+      <span class="dot">🎯</span>
+      <span>ff-external-<span class="accent">esp</span></span>
+    </a>
+    <nav class="links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary" href="https://gitscore.cc">Download</a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="pill"><span class="pulse"></span>FreeFire External Cheats · Educational Purpose</span>
+      <h1>See the game differently with a clean external ESP overlay.</h1>
+      <p class="lead">
+        ff-external-esp is a C++ external overlay built for research and learning.
+        Player boxes, skeleton ESP, distance readouts and item glow — rendered from outside
+        the process, with no injector required.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://gitscore.cc">⬇ Download for Windows</a>
+        <a class="btn btn-ghost" href="https://gitscore.cc">GitHub Repository</a>
+      </div>
+      <div class="stats">
+        <div class="chip"><div class="val">12,400+</div><div class="lbl">Downloads</div></div>
+        <div class="chip"><div class="val">v2.4.1</div><div class="lbl">Latest Version</div></div>
+        <div class="chip"><div class="val">Windows 10 / 11</div><div class="lbl">Platform</div></div>
+        <div class="chip"><div class="val">Free &amp; Open Source</div><div class="lbl">License</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Features</div>
+        <h2>Everything rendered by an external C++ overlay</h2>
+        <p>Each module runs independently over a transparent window — no DLL injection, no game file modification.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="ico">📦</span>
+          <h3>Player Boxes</h3>
+          <p>2D bounding boxes drawn around every visible player, with configurable thickness and color coding by distance.</p>
+        </article>
+        <article class="card">
+          <span class="ico">🦴</span>
+          <h3>Skeleton ESP</h3>
+          <p>Bone-level skeleton lines mapped from head to toe, giving a clear read on stance, aiming direction and movement.</p>
+        </article>
+        <article class="card">
+          <span class="ico">📏</span>
+          <h3>Distance Readout</h3>
+          <p>Live meter values next to each target so you can judge range instantly without opening the map or guessing.</p>
+        </article>
+        <article class="card">
+          <span class="ico">✨</span>
+          <h3>Item Glow</h3>
+          <p>Highlights loot, weapons and pickups with a soft glow layer so nothing useful gets missed during rotations.</p>
+        </article>
+        <article class="card">
+          <span class="ico">🛡️</span>
+          <h3>No Injector Needed</h3>
+          <p>Pure external overlay architecture — the C++ process only reads and draws, keeping the game binary untouched.</p>
+        </article>
+        <article class="card">
+          <span class="ico">🧑‍💻</span>
+          <h3>Open Source C++</h3>
+          <p>Readable, documented source on GitHub. Built as a learning project for overlay rendering, memory reading and UI layout.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">How it works</div>
+        <h2>Three steps from download to overlay</h2>
+        <p>No installers, no dependencies. The whole setup takes under a minute.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <div class="body">
+            <h3>Download &amp; extract</h3>
+            <p>Grab the latest build from the download page, then extract the archive into any folder. Everything ships as a single self-contained executable — no runtime installs, no DLL bundles.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div class="body">
+            <h3>Launch the overlay</h3>
+            <p>Run <code>ff-external-esp.exe</code> as administrator so the overlay can attach to the game window. The transparent render window appears on top of the desktop, ready to draw.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div class="body">
+            <h3>Toggle your modules</h3>
+            <p>Use the in-overlay menu to switch on player boxes, skeleton ESP, distance readout or item glow. Settings persist between sessions in a local config file.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">FAQ</div>
+        <h2>Questions before you download</h2>
+        <p>Straight answers about the project, its purpose and its requirements.</p>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Is ff-external-esp really free?<span class="plus"></span></summary>
+          <p class="ans">Yes. The project is free and fully open source. The source is published on the repository, and the compiled build is available from the download page at no cost. There are no paid tiers, keys or subscriptions.</p>
+        </details>
+        <details>
+          <summary>Which Windows versions are supported?<span class="plus"></span></summary>
+          <p class="ans">The build targets Windows 10 and Windows 11, 64-bit. It uses standard Win32 overlay APIs and DirectX rendering, so no extra Visual C++ redistributables or .NET runtime are required beyond what ships with Windows.</p>
+        </details>
+        <details>
+          <summary>Why does it say "educational purpose only"?<span class="plus"></span></summary>
+          <p class="ans">This repository exists as a learning resource for external overlay rendering in C++. It demonstrates window compositing, memory reading patterns and drawing ESP primitives. It is not distributed for competitive play, and using it in live matches is against the game's terms of service.</p>
+        </details>
+        <details>
+          <summary>Does it use an injector or modify game files?<span class="plus"></span></summary>
+          <p class="ans">No. The overlay is entirely external — it never injects a DLL into the game process and never writes to game files on disk. It reads data externally and renders its own transparent window on top of the desktop, which is exactly the technique this project is meant to teach.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section>
+    <div class="wrap">
+      <div class="cta-banner">
+        <h
