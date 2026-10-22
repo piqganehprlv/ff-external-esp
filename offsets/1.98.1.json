@@ -1,0 +1,19 @@
+{
+  "client_version": "1.98.1",
+  "notes": "Educational offsets for FreeFire emulator builds only.",
+  "modules": {
+    "GameCore.dll": {
+      "local_player": [0x02F1A8C0, 0x1C, 0x0],
+      "entity_list": [0x02F1A900, 0x18, 0x8, 0x0],
+      "view_matrix": [0x02F1B040, 0x0]
+    },
+    "UnityPlayer.dll": {
+      "camera": [0x01A3E2F0, 0x30]
+    }
+  },
+  "weapon": {
+    "recoil_x": 0x1A4,
+    "recoil_y": 0x1A8,
+    "spread": 0x1B0
+  }
+}
