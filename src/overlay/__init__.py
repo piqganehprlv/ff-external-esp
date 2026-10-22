@@ -1,0 +1,1 @@
+"""Overlay drawing layer (transparent top-most window)."""
