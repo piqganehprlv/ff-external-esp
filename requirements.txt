@@ -1,0 +1,9 @@
+# ff-external-esp runtime dependencies (Python 3.11+)
+pywin32>=306
+pymem>=1.12.0
+Pillow>=10.2.0
+numpy>=1.26.0
+keyboard>=0.13.5
+pyyaml>=6.0.1
+loguru>=0.7.2
+customtkinter>=5.2.2
