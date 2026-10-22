@@ -1,0 +1,15 @@
+# ff-external-esp default config
+target_process: FreeFire.exe
+offsets_file: offsets/1.98.1.json
+
+overlay:
+  width: 1920
+  height: 1080
+  fps: 60
+  transparent: true
+  font: Consolas
+
+enabled_plugins:
+  - esp
+  - aimbot
+  - radar
