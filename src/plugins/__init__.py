@@ -1,0 +1,1 @@
+"""Cheat plugins — each plugin demonstrates one external cheat feature."""
